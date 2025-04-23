@@ -8,7 +8,7 @@ const Password = ({ requirements, styles }: PasswordProps) => {
     hasSpecialChar: false,
     hasNumber: false,
     hasUppercase: false,
-    noConsecutiveLetters: false,
+    noConsecutiveLetters: true,
   });
 
   const validatePassword = (value: string) => {
