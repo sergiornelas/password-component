@@ -1,25 +1,46 @@
+import { PasswordProps, PasswordRequirements } from "@src/types";
 import { useState } from "react";
 import "./Password.css";
-import { PasswordValidation } from "@src/types";
 
-const Password = () => {
+const Password = ({
+  requirements,
+  styles = { valid: "valid", invalid: "invalid" },
+}: PasswordProps) => {
   const [password, setPassword] = useState("");
-  const [validation, setValidation] = useState<PasswordValidation>({
+  const [validation, setValidation] = useState<PasswordRequirements>({
     hasNumber: false,
     hasSpecialChar: false,
     hasUppercase: false,
-    noConsecutiveLetters: true,
+    noConsecutiveLetters: false,
   });
 
   const validatePassword = (value: string) => {
-    setValidation({
-      hasNumber: /[0-9]/.test(value),
-      hasSpecialChar: /[!@#$%^&*]/.test(value),
-      hasUppercase: /[A-Z]/.test(value),
-      noConsecutiveLetters:
-        !/([a-zA-Z0-9!@#$%^&*()_+\-=[\]{}|;':",./<>?`~\\\\])\1/.test(value),
-    });
+    const newValidation: PasswordRequirements = {};
+    if (requirements.hasNumber) {
+      newValidation.hasNumber = /[0-9]/.test(value);
+    }
+    if (requirements.hasSpecialChar) {
+      newValidation.hasSpecialChar = /[!@#$%^&*]/.test(value);
+    }
+    if (requirements.hasUppercase) {
+      newValidation.hasUppercase = /[A-Z]/.test(value);
+    }
+    if (requirements.noConsecutiveLetters) {
+      newValidation.noConsecutiveLetters =
+        !/([a-zA-Z0-9!@#$%^&*()_+\-=[\]{}|;':",./<>?`~\\\\])\1/.test(value);
+    }
+    setValidation(newValidation);
     setPassword(value);
+  };
+
+  const getRequirementLabel = (key: keyof PasswordRequirements) => {
+    const labels: Record<keyof PasswordRequirements, string> = {
+      hasNumber: "Has a number 0-9",
+      hasSpecialChar: "Has a special char !@#$%^&*",
+      hasUppercase: "Has uppercase Letter",
+      noConsecutiveLetters: "No consecutive letters",
+    };
+    return labels[key];
   };
 
   return (
@@ -33,38 +54,24 @@ const Password = () => {
           placeholder="Enter password"
         />
         <div>
-          <div
-            className={`requirement ${
-              validation.hasNumber ? "valid" : "invalid"
-            }`}
-          >
-            <span className="">{validation.hasNumber ? "✓" : "✗"}</span>
-            Has a number 0-9
-          </div>
-          <div
-            className={`requirement ${
-              validation.hasSpecialChar ? "valid" : "invalid"
-            }`}
-          >
-            <span>{validation.hasSpecialChar ? "✓" : "✗"}</span>
-            Has a special char !@#$%^&*
-          </div>
-          <div
-            className={`requirement ${
-              validation.hasUppercase ? "valid" : "invalid"
-            }`}
-          >
-            <span>{validation.hasUppercase ? "✓" : "✗"}</span>
-            Has uppercase Letter
-          </div>
-          <div
-            className={`requirement ${
-              validation.noConsecutiveLetters ? "valid" : "invalid"
-            }`}
-          >
-            <span>{validation.noConsecutiveLetters ? "✓" : "✗"}</span>
-            No consecutive letters
-          </div>
+          {Object.entries(requirements).map(([requirement, enabled]) => {
+            if (!enabled) return null;
+            const passwordRequirement =
+              requirement as keyof PasswordRequirements;
+            return (
+              <div
+                key={requirement}
+                className={`requirement ${
+                  validation[passwordRequirement]
+                    ? styles?.valid || ""
+                    : styles?.invalid || ""
+                }`}
+              >
+                <span>{validation[passwordRequirement] ? "✓" : "✗"}</span>
+                {getRequirementLabel(passwordRequirement)}
+              </div>
+            );
+          })}
         </div>
       </div>
     </>
