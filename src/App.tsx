@@ -12,11 +12,11 @@ function App() {
 
   // Optionally, you can pass custom styles to the Password component using the
   // styles prop.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const customStyles = {
-    valid: "new_valid",
-    invalid: "new_invalid",
-  };
+  //
+  // const customStyles = {
+  //   valid: "new_valid",
+  //   invalid: "new_invalid",
+  // };
 
   return (
     <div className="App">
