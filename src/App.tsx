@@ -1,10 +1,10 @@
-import PasswordValidator from "./components/PasswordValidator";
+import Password from "./components/Password";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <PasswordValidator />
+      <Password />
     </div>
   );
 }

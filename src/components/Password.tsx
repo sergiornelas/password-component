@@ -1,20 +1,14 @@
 import { useState } from "react";
-import "./PasswordValidator.css";
+import "./Password.css";
+import { PasswordValidation } from "@src/types";
 
-interface PasswordValidation {
-  hasNumber: boolean;
-  hasSpecialChar: boolean;
-  hasUppercase: boolean;
-  noConsecutiveLetters: boolean;
-}
-
-const PasswordValidator = () => {
+const Password = () => {
   const [password, setPassword] = useState("");
   const [validation, setValidation] = useState<PasswordValidation>({
     hasNumber: false,
     hasSpecialChar: false,
     hasUppercase: false,
-    noConsecutiveLetters: false,
+    noConsecutiveLetters: true,
   });
 
   const validatePassword = (value: string) => {
@@ -22,7 +16,8 @@ const PasswordValidator = () => {
       hasNumber: /[0-9]/.test(value),
       hasSpecialChar: /[!@#$%^&*]/.test(value),
       hasUppercase: /[A-Z]/.test(value),
-      noConsecutiveLetters: !/([a-zA-Z])\1/.test(value),
+      noConsecutiveLetters:
+        !/([a-zA-Z0-9!@#$%^&*()_+\-=[\]{}|;':",./<>?`~\\\\])\1/.test(value),
     });
     setPassword(value);
   };
@@ -76,4 +71,4 @@ const PasswordValidator = () => {
   );
 };
 
-export default PasswordValidator;
+export default Password;
