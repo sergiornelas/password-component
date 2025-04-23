@@ -2,25 +2,22 @@ import { PasswordProps, PasswordRequirements } from "@src/types";
 import { useState } from "react";
 import "./Password.css";
 
-const Password = ({
-  requirements,
-  styles = { valid: "valid", invalid: "invalid" },
-}: PasswordProps) => {
+const Password = ({ requirements, styles }: PasswordProps) => {
   const [password, setPassword] = useState("");
   const [validation, setValidation] = useState<PasswordRequirements>({
-    hasNumber: false,
     hasSpecialChar: false,
+    hasNumber: false,
     hasUppercase: false,
     noConsecutiveLetters: false,
   });
 
   const validatePassword = (value: string) => {
     const newValidation: PasswordRequirements = {};
-    if (requirements.hasNumber) {
-      newValidation.hasNumber = /[0-9]/.test(value);
-    }
     if (requirements.hasSpecialChar) {
       newValidation.hasSpecialChar = /[!@#$%^&*]/.test(value);
+    }
+    if (requirements.hasNumber) {
+      newValidation.hasNumber = /[0-9]/.test(value);
     }
     if (requirements.hasUppercase) {
       newValidation.hasUppercase = /[A-Z]/.test(value);
@@ -63,8 +60,8 @@ const Password = ({
                 key={requirement}
                 className={`requirement ${
                   validation[passwordRequirement]
-                    ? styles?.valid || ""
-                    : styles?.invalid || ""
+                    ? styles?.valid || "valid"
+                    : styles?.invalid || "invalid"
                 }`}
               >
                 <span>{validation[passwordRequirement] ? "✓" : "✗"}</span>

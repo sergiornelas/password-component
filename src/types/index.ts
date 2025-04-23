@@ -1,6 +1,6 @@
 export interface PasswordRequirements {
-  hasNumber?: boolean;
   hasSpecialChar?: boolean;
+  hasNumber?: boolean;
   hasUppercase?: boolean;
   noConsecutiveLetters?: boolean;
 }
