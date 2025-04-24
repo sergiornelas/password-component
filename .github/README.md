@@ -7,6 +7,8 @@ This is a simple component that validates a password based on the following requ
 - Has at least one uppercase letter
 - Has no consecutive letters
 
+Styles can be extended using the `styles` prop.
+
 ## Installation
 
 1. Clone the repository
