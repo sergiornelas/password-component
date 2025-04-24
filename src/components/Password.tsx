@@ -1,43 +1,27 @@
+import { LABELS } from "@src/constants";
 import { PasswordProps, PasswordRequirements } from "@src/types";
 import { useState } from "react";
 import "./Password.css";
 
 const Password = ({ requirements, styles }: PasswordProps) => {
-  const [password, setPassword] = useState("");
-  const [validation, setValidation] = useState<PasswordRequirements>({
-    hasSpecialChar: false,
-    hasNumber: false,
-    hasUppercase: false,
-    noConsecutiveLetters: true,
-  });
+  const [inputPassword, setInputPassword] = useState("");
 
-  const validatePassword = (value: string) => {
+  const getValidation = (input: string): PasswordRequirements => {
     const newValidation: PasswordRequirements = {};
     if (requirements.hasSpecialChar) {
-      newValidation.hasSpecialChar = /[!@#$%^&*]/.test(value);
+      newValidation.hasSpecialChar = /[!@#$%^&*]/.test(input);
     }
     if (requirements.hasNumber) {
-      newValidation.hasNumber = /[0-9]/.test(value);
+      newValidation.hasNumber = /[0-9]/.test(input);
     }
     if (requirements.hasUppercase) {
-      newValidation.hasUppercase = /[A-Z]/.test(value);
+      newValidation.hasUppercase = /[A-Z]/.test(input);
     }
     if (requirements.noConsecutiveLetters) {
       newValidation.noConsecutiveLetters =
-        !/([a-zA-Z0-9!@#$%^&*()_+\-=[\]{}|;':",./<>?`~\\\\])\1/.test(value);
+        !/([a-zA-Z0-9!@#$%^&*()_+\-=[\]{}|;':",./<>?`~\\\\])\1/.test(input);
     }
-    setValidation(newValidation);
-    setPassword(value);
-  };
-
-  const getRequirementLabel = (key: keyof PasswordRequirements) => {
-    const labels: Record<keyof PasswordRequirements, string> = {
-      hasNumber: "Has a number 0-9",
-      hasSpecialChar: "Has a special char !@#$%^&*",
-      hasUppercase: "Has uppercase Letter",
-      noConsecutiveLetters: "No consecutive letters",
-    };
-    return labels[key];
+    return newValidation;
   };
 
   return (
@@ -46,26 +30,25 @@ const Password = ({ requirements, styles }: PasswordProps) => {
       <div className="container">
         <input
           className="password-input"
-          value={password}
-          onChange={(e) => validatePassword(e.target.value)}
+          value={inputPassword}
+          onChange={(e) => setInputPassword(e.target.value)}
           placeholder="Enter password"
         />
         <div>
-          {Object.entries(requirements).map(([requirement, enabled]) => {
-            if (!enabled) return null;
-            const passwordRequirement =
-              requirement as keyof PasswordRequirements;
+          {Object.entries(requirements).map(([requirement]) => {
+            const key = requirement as keyof PasswordRequirements;
+            const isValid = getValidation(inputPassword)[key];
             return (
               <div
                 key={requirement}
                 className={`requirement ${
-                  validation[passwordRequirement]
+                  isValid
                     ? styles?.valid || "valid"
                     : styles?.invalid || "invalid"
                 }`}
               >
-                <span>{validation[passwordRequirement] ? "✓" : "✗"}</span>
-                {getRequirementLabel(passwordRequirement)}
+                <span>{isValid ? "✓" : "✗"}</span>
+                {LABELS[key]}
               </div>
             );
           })}

@@ -1,9 +1,10 @@
 import "./App.css";
 import Password from "./components/Password";
+import { PasswordRequirements } from "./types";
 
 function App() {
   // Play with the options to see how the component behaves.
-  const loginPasswordReqs = {
+  const loginPasswordReqs: PasswordRequirements = {
     hasNumber: true,
     hasSpecialChar: true,
     hasUppercase: true,
@@ -11,8 +12,8 @@ function App() {
   };
 
   // Optionally, you can pass custom styles to the Password component using the
-  // styles prop.
-  //
+  // styles prop:
+
   // const customStyles = {
   //   valid: "new_valid",
   //   invalid: "new_invalid",
@@ -21,6 +22,7 @@ function App() {
   return (
     <div className="App">
       <Password requirements={loginPasswordReqs} />
+      {/* <Password requirements={loginPasswordReqs} styles={customStyles} /> */}
     </div>
   );
 }
